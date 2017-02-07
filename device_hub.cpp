@@ -3,6 +3,8 @@
 #include <Arduino.h>
 #include "SparkJson/SparkJson.h"
 #include <string>
+#include <map>
+
 
 vector<Device*> device_list; // List of all current devices
 //String device_list_str;
@@ -65,75 +67,77 @@ Device* get_device(string device_id){
     return 0;
 }
 
-
-//Use this later for if-else statements
-string_code hash_token(String inString) {
-    if (inString == "switch") return eSwitch;
-    if (inString == "slider") return eSlider;
-    if (inString == "rgb") return eRGB;
-    if (inString == "sensor") return eSensor;
-    if (inString == "on") return eOn;
-    if (inString == "off") return eOff;
-    return eOff;
-    
-}
-
-//Parsing JSON command passed by server, only one exec command allowed
+/*
+ * Parses string-encoded command passed by server.
+ * There must be an even number of tokens passed in due to the
+ * key-value pair format and tokenization.
+ * 
+ * EXAMPLE INPUT: {"id,light1,type,1,exec,on,v,50"}  
+ * Types:
+ * 0: switch (not necessary to input)
+ * 1: slider
+ * 2: rgb
+ * 3: sensor
+ * Keys:
+ * id: Id string of a device
+ * t: The type of a device
+ * e: The executable being triggered
+ *    Values: on, off, "2" (value/sensor input)
+ * v: The value for a command (only for execs that required a value input)
+ * r,g,b: RGB values paired with integers
+ *
+ */
 int parse_cmd(String cmd) {
     Serial.println(cmd);
-    // Parse json object
-    char buf[512];
-    cmd.toCharArray(buf, 512);
-    StaticJsonBuffer<512> jsonBuffer;
-    JsonObject& json = jsonBuffer.parseObject(buf);
-
-    //NOTE: Only use on/off to start/stop any device completely
     
-    /*
-    { "arg": "{\"id\": \"light1\", \"exec\": \"on\" } }  
-    */
-    const char* tmp_type = json["t"];
-    char* type = const_cast<char*>(tmp_type);
+    //Initializing variables to process cmd input into a dictionary
+    std::map<string, string> dict;
+    char* dup = strdup(cmd.c_str());
+    char* token = strtok(dup, ",");
     
-    const char* tmp_exec = json["e"];
-    char* exec = const_cast<char*>(tmp_exec);
-    
-    Device* device = NULL;
-    for (Device* cur_device : device_list) {
-        if (cur_device->id == json["id"]){
-            device = cur_device;
-        }
+    //Add tokens 2 at a time to the map. e.g. dict["type"] = "switch"
+    while (token != NULL) {
+       //Process next two char* tokens and storing as strings in the dict[key,value]
+       string key(token);
+       token = strtok(NULL, ","); 
+       string value(token);
+       dict[key] = value;
+       token = strtok(NULL, ",");
     }
+    free(dup);
+    
+    /* Process Tokens */
+    
+     Device* device = get_device(dict["id"]);
     
     // Check if call is a generic on/off call:
-    if (strcmp(exec, "1") == 0) {
+    if (dict["e"] == "on") {
         device->on();
         return 1;
-    } else if (strcmp(exec, "0") == 0) {
+    } else if (dict["e"] == "off") {
         device->off();
         return 2;
     }
     
-    /* If call is NOT generic on/off: */
-    
-    if (strcmp(type, "1") == 0) {  // SLIDER:
+    // If call is NOT generic on/off:
+    if (dict["t"] == "1") {  // SLIDER:
         Slider* slider = (Slider *) device;
-        if (strcmp(exec, "2") == 0) {
-            const char* tmp_val = json["v"];
-            char* val_str = const_cast<char*>(tmp_val);
-            int value = atoi(val_str);
+        if (dict["e"] == "2") {
+            int value = atoi(dict["v"].c_str()); //stoi not yet supported by photon?
             slider->update_slider(value);
             return 3;
         }
-    } else if (strcmp(type, "2") == 0) {  // RGB DEVICE:
+    } else if (dict["t"] == "2") {  // RGB DEVICE:
         RGB_device* rgb_device = (RGB_device *) device;
-        if (exec == "2") {
-            rgb_device->set_colors((int) json["r"], (int) json["g"], (int) json["b"]);
+        if (dict["e"] == "2") {
+            //Converting r,g,b strings to ints
+            int r = atoi(dict["r"].c_str()); int g = atoi(dict["r"].c_str()); int b = atoi(dict["r"].c_str());
+            rgb_device->set_colors(r,g,b);
             return 4;
         }
-    } else if (strcmp(type, "3") == 0) {  // SENSOR:
+    } else if (dict["t"] == "3") {  // SENSOR:
         Sensor* sensor = (Sensor *) device;
-        if (exec == "2") {
+        if (dict["e"] == "2") {
             sensor->read();
             return 5;
         }

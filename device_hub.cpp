@@ -131,7 +131,9 @@ int parse_cmd(String cmd) {
         RGB_device* rgb_device = (RGB_device *) device;
         if (dict["e"] == "2") {
             //Converting r,g,b strings to ints
-            int r = atoi(dict["r"].c_str()); int g = atoi(dict["r"].c_str()); int b = atoi(dict["r"].c_str());
+            int r = atoi(dict["r"].c_str()); 
+            int g = atoi(dict["g"].c_str()); 
+            int b = atoi(dict["b"].c_str());
             rgb_device->set_colors(r,g,b);
             return 4;
         }

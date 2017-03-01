@@ -7,7 +7,7 @@
 
 
 vector<Device*> device_list; // List of all current devices
-//String device_list_str;
+String device_list_str;
 
 Device::Device (const string& d_id, const string& d_type, func_ptr_void d_on_func = 0, func_ptr_void d_off_func = 0) : 
   on_func(d_on_func), off_func(d_off_func), id(d_id), type(d_type), status(0) { }
@@ -32,6 +32,17 @@ void add_sensor(const string& id, func_ptr_void d_on_func = 0, func_ptr_void d_o
     device_list.push_back(new_sensor);
 }
 
+void iota_setup() {
+  	Particle.variable("device_list", &device_list_str, STRING);
+  	Particle.function("change_state", parse_cmd);
+	make_device_list(device_list_str);
+}
+/*
+ * Generates a String encoding of the device list that can be
+ * accessed by POST requests via Particle.function().
+ *
+ * As of 3/1/17: Maximum String length is 622 bytes
+ */
 void make_device_list(String& list){
     StaticJsonBuffer<1024> jsonBuffer;
 
@@ -44,11 +55,16 @@ void make_device_list(String& list){
         device_json_ob["t"] = (cur_device->type).c_str();  // Add device type
         
         // Add device status:
-        if (cur_device->status){
+        if (cur_device->status) {
             device_json_ob["e"] = "1";
         }
         else {
             device_json_ob["e"] = "0";
+        }
+        // Add device value if applicable
+        if (device_json_ob["t"] == "3") { //Device type 3 is a Sensor
+            Sensor* sensor = (Sensor *) cur_device;
+            device_json_ob["v"] = (*sensor).read(); //Stores int sensor value
         }
         devicesArr.add(device_json_ob);
     }
@@ -97,7 +113,7 @@ int parse_cmd(String cmd) {
     
     //Add tokens 2 at a time to the map. e.g. dict["type"] = "switch"
     while (token != NULL) {
-       //Process next two char* tokens and storing as strings in the dict[key,value]
+       //Process next two char* tokens and storing as strings in the dict[key]=value
        string key(token);
        token = strtok(NULL, ","); 
        string value(token);

@@ -12,6 +12,7 @@
 using namespace std;
 typedef void (*func_ptr_void)(void);
 typedef void (*func_ptr_int)(int);
+typedef int (*func_ptr_return_int)(void);
 typedef void (*func_ptr_color)(int, int, int);
 
 enum string_code {
@@ -102,7 +103,7 @@ class Slider: public Device {
   public:
     Slider(const string& d_id, const string& d_type, func_ptr_void d_on_func = 0, func_ptr_void d_off_func = 0, func_ptr_int d_slider_func = 0) :
     Device(d_id, d_type, d_on_func, d_off_func), slider_func(d_slider_func) {};
-    
+
     void set_slider_func(func_ptr_int func_to_call) {
       slider_func = func_to_call;
     }
@@ -198,16 +199,17 @@ class RGB_device: public Device {
  */
 class Sensor: public Device {
   private:
-    func_ptr_void read_func;
+    func_ptr_return_int read_func;
   public:
     Sensor(const string& d_id, const string& d_type, func_ptr_void d_on_func = 0, func_ptr_void d_off_func = 0) :
     Device(d_id, d_type, d_on_func, d_off_func) {};
     
-    void set_read_func(func_ptr_void func_to_call){
+    // func_to_call should return a String value that can then be returned by read()
+    void set_read_func(func_ptr_return_int func_to_call){
       read_func = func_to_call;
     }
-    void read(){
-      read_func();
+    int read(){
+      return read_func();
     }
     void on(){
       status = 1;
@@ -231,6 +233,7 @@ void add_slider(const string& id, func_ptr_void d_on_func, func_ptr_void d_off_f
 void add_rgb(const string& id, func_ptr_void d_on_func, func_ptr_void d_off_func, func_ptr_color d_color_func);
 void add_sensor(const string& id, func_ptr_void d_on_func, func_ptr_void d_off_func);
 void make_device_list(String& list);
+void iota_setup();
 Device* get_device(string device_id);
 int parse_cmd(String cmd);
 string_code hash_token(String inString);

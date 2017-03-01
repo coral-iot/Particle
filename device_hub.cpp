@@ -139,7 +139,7 @@ int parse_cmd(String cmd) {
     if (dict["t"] == "1") {  // SLIDER:
         Slider* slider = (Slider *) device;
         if (dict["e"] == "2") {
-            int value = atoi(dict["v"].c_str()); //stoi not yet supported by photon?
+            int value = atoi(dict["v"].c_str()); 
             slider->update_slider(value);
             return 3;
         }

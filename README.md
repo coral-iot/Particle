@@ -39,7 +39,7 @@ void setup() {
     Any of your own setup code goes here.
     **/
     add_switch("0", &turn_on_light1, &turn_off_light1);
-    a few lines of code
+    
     coral_setup();
 }
 ```
@@ -60,7 +60,6 @@ void turn_off_servo() {
     servo.detach();
     return;
 }
-
 void servo_control(int i) {
    servo.attach(A5);
    servo.write(i);

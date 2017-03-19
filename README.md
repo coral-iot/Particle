@@ -100,7 +100,7 @@ The RGB class can turn on/off and do something based off of 3 integer values.
 
 ##### add_rgb(const string, void(*on_function)(void), void(*off_function)(void), void(*rgb_function)(int, int, int))
 
-### Sensor
+#### Sensor
 The Sensor class can turn on/off and return sensor data values.
 
 ##### add_sensor(const string, void(*on_function)(void), void(*off_function)(void))

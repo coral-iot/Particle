@@ -1,6 +1,20 @@
 ## Particle Library for Coral
 A C++ package for managing multiple wifi-enabled devices on a single Photon.
 
+### Table of Contents
+[Introduction](https://github.com/coral-iot/Particle#introduction)
+
+[Setup](https://github.com/coral-iot/Particle#setup)
+
+[How to Use](https://github.com/coral-iot/Particle#how-to-use)
+
+[Device Classes](https://github.com/coral-iot/Particle#device-classes)
+
+[Making Requests](https://github.com/coral-iot/Particle#making-requests)
+
+[Contributors](https://github.com/coral-iot/Particle#contibutors)
+
+
 ### Introduction
 The purpose of this library is to make it quick and easy to add and manage multiple devices on your Photon. 
 With minimal setup, you will be able to change the state of any device hooked up to your Photon with Coral or custom HTTP requests.

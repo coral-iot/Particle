@@ -125,7 +125,7 @@ TODO
 ### Making Requests
 If you are using Coral, you don't need to worry about anything in this section - we will cover all of this for you!
 
-Unfortunately, Particle has a 63 character limit on the argument length of Particle.function(), so the request that we send send to the Photon needs to be encoded.
+Unfortunately, Particle has a 63 character limit on the argument length of Particle.function(), so the request that we send to the Photon needs to be encoded.
 
 Each request contains a series of comma separated Keys and Values. An example of a Key would be "id", which stands for the unique identifier of a device on your Photon. The Value of "id" would be the same 1-2 character String id that you used during the device setup. Most of the Keys are abbreviated so that we don't quickly run out the 63 character limit. All of the abbreviations are in the table below.
 

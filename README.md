@@ -30,7 +30,7 @@ To use the library, simply download and include the package. If you are using Pa
 
 ### How to Use
 #### Adding a device
-To setup your first device, you first want to look at our list of device classes and choose which one suits your project the best. This library is built on a bunch of device classes with generic functionality For example, the 'Switch' class has the ability to turn_on() and turn_off(). So if you are building something which only needs to be turned on and off, you would first create your own turn_on() and turn_off() functions:
+To setup your first device, you first want to look at our list of device classes and choose which one suits your project the best. This library is built on a bunch of device classes with generic functionality For example, the 'Switch' class has the ability to `turn_on()` and `turn_off()`. So if you are building something which only needs to be turned on and off, you would first create your own `turn_on()` and `turn_off()` functions:
 
 ```C++
 //Turns on the light that I hooked up to my Photon
@@ -45,7 +45,7 @@ void turn_off_light() {
 }
 
 ```
-Next, you can pass the function pointers to the add_switch() function from the library in the Photon's setup() loop:
+Next, you can pass the function pointers to the `add_switch()` function from the library in the Photon's `setup()` loop:
 
 ```C++
 void setup() {
@@ -57,9 +57,9 @@ void setup() {
     coral_setup();
 }
 ```
-Now your device has been added! Lastly, you can see we wrote coral_setup() at the end up the setup() method. coral_setup() sets up all of your devices once they have been added and connects them to the Internet via Particle's built-in functions.
+Now your device has been added! Lastly, you can see we wrote `coral_setup()` at the end up the `setup()` method. coral_setup() sets up all of your devices once they have been added and connects them to the Internet via Particle's built-in functions.
 
-It is essential for coral_setup() to be called at the very end of your setup() function.
+It is essential for `coral_setup()` to be called at the very end of your `setup()` function.
 
 #### Adding more devices
 
@@ -80,7 +80,7 @@ void servo_control(int i) {
    return;
 }
 ```
-Now that we have the functions defined for our Servo, we pass them in to the our add_slider() function:
+Now that we have the functions defined for our Servo, we pass them in to the our `add_slider()` function:
 
 ```C++
 void setup() {
@@ -93,7 +93,7 @@ void setup() {
     coral_setup();
 }
 ```
-The String at the beginning of add_switch() and add_slider() is an arbitrary device id. We recommend just labelling each device incrementally starting from 0 as we did above. Identifiers should be 1 or 2 characters maximum.
+The String at the beginning of `add_switch()` and `add_slider()` is an arbitrary device id. We recommend just labelling each device incrementally starting from 0 as we did above. Identifiers should be 1 or 2 characters maximum.
 
 That's it! Now we are ready to control our light switch and servo motor with Coral.
 
@@ -101,23 +101,24 @@ That's it! Now we are ready to control our light switch and servo motor with Cor
 ### Device Classes
 #### Switch: 
 The switch class is built for simple on/off functionality. 
-##### add_switch(const string, void(*on_function)(void), void(*off_function)(void))
+
+`add_switch(const string, void(*on_function)(void), void(*off_function)(void))`
 
 
 #### Slider
 The slider class can turn on/off and do something based off of an integer value.
 
-##### add_slider(const string, void(*on_function)(void), void(*off_function)(void), void(*slide_function)(int))
+`add_slider(const string, void(*on_function)(void), void(*off_function)(void), void(*slide_function)(int))`
 
 #### RGB
 The RGB class can turn on/off and do something based off of 3 integer values.
 
-##### add_rgb(const string, void(*on_function)(void), void(*off_function)(void), void(*rgb_function)(int, int, int))
+` add_rgb(const string, void(*on_function)(void), void(*off_function)(void), void(*rgb_function)(int, int, int)) `
 
 #### Sensor
 The Sensor class can turn on/off and return sensor data values.
 
-##### add_sensor(const string, void(*on_function)(void), void(*off_function)(void))
+` add_sensor(const string, void(*on_function)(void), void(*off_function)(void)) `
 
 TODO
 
@@ -125,7 +126,7 @@ TODO
 ### Making Requests
 If you are using Coral, you don't need to worry about anything in this section - we will cover all of this for you!
 
-Unfortunately, Particle has a 63 character limit on the argument length of Particle.function(), so the request that we send to the Photon needs to be encoded.
+Unfortunately, Particle has a 63 character limit on the argument length of `Particle.function()`, so the request that we send to the Photon needs to be encoded.
 
 Each request contains a series of comma separated Keys and Values. An example of a Key would be "id", which stands for the unique identifier of a device on your Photon. The Value of "id" would be the same 1-2 character String id that you used during the device setup. Most of the Keys are abbreviated so that we don't quickly run out the 63 character limit. All of the abbreviations are in the table below.
 

@@ -30,7 +30,7 @@ To use the library, simply download and include the package. If you are using Pa
 
 ### How to Use
 #### Adding a device
-To setup your first device, you first want to look at our list of device classes and choose which one suits your project the best. This library is built on a bunch of device classes with generic functionality For example, the 'Switch' class has the ability to `turn_on()` and `turn_off()`. So if you are building something which only needs to be turned on and off, you would first create your own `turn_on()` and `turn_off()` functions:
+To setup your first device, you first want to look at our list of device classes and choose which one suits your project the best. This library is built on a bunch of device classes with generic functionality. For example, the 'Switch' class has the ability to `turn_on()` and `turn_off()`. So if you are building something which only needs to be turned on and off, you would first create your own `turn_on()` and `turn_off()` functions:
 
 ```C++
 //Turns on the light that I hooked up to my Photon
@@ -63,7 +63,7 @@ It is essential for `coral_setup()` to be called at the very end of your `setup(
 
 #### Adding more devices
 
-Let's say we want to control a Servo motor on the same Particle. We first need to look at the available devices in the library. The 'Slider' class should work well for Servo motor, because all we need to do with a Servo is change an integer value which corresponds to some angle. Again, we define our own functions for controlling the servo:
+Let's say we want to control a servo motor on the same Particle. We first need to look at the available devices in the library. The 'Slider' class should work well for servo motor, because all we need to do with a servo is change an integer value which corresponds to some angle. Again, we define our own functions for controlling the servo:
 ```C++
 //Turn on the servo (not actually useful in this example)
 void turn_on_servo() {
@@ -80,7 +80,7 @@ void servo_control(int i) {
    return;
 }
 ```
-Now that we have the functions defined for our Servo, we pass them in to the our `add_slider()` function:
+Now that we have the functions defined for our servo, we pass them in to the our `add_slider()` function:
 
 ```C++
 void setup() {

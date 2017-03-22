@@ -201,15 +201,17 @@ class Sensor: public Device {
   private:
     func_ptr_return_int read_func;
   public:
-    Sensor(const string& d_id, const string& d_type, func_ptr_void d_on_func = 0, func_ptr_void d_off_func = 0) :
-    Device(d_id, d_type, d_on_func, d_off_func) {};
+    Sensor(const string& d_id, const string& d_type, func_ptr_void d_on_func = 0, func_ptr_void d_off_func = 0, func_ptr_return_int d_sense_func = 0) :
+    Device(d_id, d_type, d_on_func, d_off_func), read_func(d_sense_func) {};
     
-    // func_to_call should return a String value that can then be returned by read()
+    // func_to_call should return a int value that can then be returned by read()
     void set_read_func(func_ptr_return_int func_to_call){
       read_func = func_to_call;
     }
     int read(){
-      return read_func();
+      if (read_func) {
+        return read_func();
+      }
     }
     void on(){
       status = 1;

@@ -27,8 +27,8 @@ void add_rgb(const string& id, func_ptr_void d_on_func = 0, func_ptr_void d_off_
     device_list.push_back(new_rgb);
 }
 
-void add_sensor(const string& id, func_ptr_void d_on_func = 0, func_ptr_void d_off_func = 0){
-    Device* new_sensor = new Sensor(id, "3", d_on_func, d_off_func);
+void add_sensor(const string& id, func_ptr_void d_on_func = 0, func_ptr_void d_off_func = 0, func_ptr_return_int d_sense_func = 0){
+    Device* new_sensor = new Sensor(id, "3", d_on_func, d_off_func, d_sense_func);
     device_list.push_back(new_sensor);
 }
 
@@ -42,6 +42,8 @@ void iota_setup() {
  * accessed by POST requests via Particle.function().
  *
  * As of 3/1/17: Maximum String length is 622 bytes
+ *
+ * Currently does not update after initialization
  */
 void make_device_list(String& list){
     StaticJsonBuffer<1024> jsonBuffer;
@@ -134,7 +136,6 @@ int parse_cmd(String cmd) {
         device->off();
         return 2;
     }
-    
     // If call is NOT generic on/off:
     if (dict["t"] == "1") {  // SLIDER:
         Slider* slider = (Slider *) device;
@@ -156,8 +157,7 @@ int parse_cmd(String cmd) {
     } else if (dict["t"] == "3") {  // SENSOR:
         Sensor* sensor = (Sensor *) device;
         if (dict["e"] == "2") {
-            sensor->read();
-            return 5;
+            return sensor->read(); //Return sensor value
         }
     }
     return -1;

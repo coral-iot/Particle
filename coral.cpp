@@ -1,7 +1,7 @@
 // Add implemetation files here
 #include "coral.h"
 #include <Arduino.h>
-#include "SparkJson/SparkJson.h"
+#include "SparkJson.h"
 #include <string>
 #include <map>
 
